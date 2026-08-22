@@ -65,6 +65,27 @@ export function getProfile(): DeepPartialProfile | null {
   return snapshot;
 }
 
+const PRESET_KEY = "icareearth.preset";
+
+/** Which demo preset (if any) produced the current profile, so results can use
+ *  the committed plan text instead of calling the API. */
+export function setPresetId(id: string | null) {
+  try {
+    if (id) window.sessionStorage.setItem(PRESET_KEY, id);
+    else window.sessionStorage.removeItem(PRESET_KEY);
+  } catch {
+    // Non-fatal: the demo just falls back to generating the plan live.
+  }
+}
+
+export function getPresetId(): string | null {
+  try {
+    return window.sessionStorage.getItem(PRESET_KEY);
+  } catch {
+    return null;
+  }
+}
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => {
