@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbfbf9;
+  --foreground: #16181c;
+  --surface: #ffffff;
+  --border: #e3e3dd;
+  --muted: #6b7078;
+  --accent: #1f7a4d;
+  --accent-soft: #e8f2ec;
+  --accent-fg: #ffffff;
+  --warm: #b4622a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-warm: var(--warm);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #0d0f11;
     --foreground: #ededed;
+    --surface: #16191c;
+    --border: #2a2e33;
+    --muted: #9aa1aa;
+    --accent: #4ba97a;
+    --accent-soft: #16261e;
+    --accent-fg: #08120c;
+    --warm: #d98a52;
   }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Buttons people tap through the whole interview. Kept here so the interview,
+   the form, and the results page cannot drift apart. */
+@utility btn-choice {
+  width: 100%;
+  text-align: left;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  padding: 0.875rem 1rem;
+  font-size: 0.975rem;
+  line-height: 1.4;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+@utility btn-primary {
+  border-radius: 0.75rem;
+  background: var(--accent);
+  color: var(--accent-fg);
+  padding: 0.8rem 1.35rem;
+  font-weight: 600;
+  transition: opacity 120ms ease;
+}
+
+@media (hover: hover) {
+  .btn-choice:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .btn-primary:hover {
+    opacity: 0.9;
+  }
+}
+
+.btn-choice:active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
 }
