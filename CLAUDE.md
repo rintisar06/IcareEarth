@@ -1,10 +1,10 @@
 @AGENTS.md
 
-# Fulcrum — project rules
+# IcareEarth — project rules
 
 An AI advisor that interviews a person about their lifestyle, computes which single
 change cuts the most carbon **for them specifically**, and shows two versions of their
-future diverging. Carbon trackers report a number; Fulcrum decides something.
+future diverging. Carbon trackers report a number; IcareEarth decides something.
 
 Two different people must get structurally different top recommendations from the same math.
 
