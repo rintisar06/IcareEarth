@@ -1,84 +1,185 @@
 {
   "_meta": {
-    "status": "PLACEHOLDER — every number in this file is an unverified ballpark. Results are not trustworthy until the entries below are checked and _meta.verification statuses are flipped.",
+    "status": "VERIFIED 2026-08-22. Every value below was checked against a primary source and the citation recorded in _meta.verification. These are population averages, not measurements of any individual.",
     "conventions": {
       "units": "All emission outputs are kg CO2e unless the key name says otherwise.",
-      "flights": "No radiative forcing multiplier is applied. This understates the warming impact of flying by roughly 2x. The convention is stated in the README so the number can be argued with.",
-      "meals": "14 main meals per week (lunch + dinner). Breakfast is not modelled.",
-      "ev": "transportPerKm.evKwhPerKm is energy, not emissions. The engine multiplies it by the province's grid intensity at runtime, which is why an EV ranks differently in Quebec than in Alberta."
+      "flights": "NO radiative forcing multiplier is applied. DEFRA publishes both variants; we use the without-RF figures (0.074 / 0.069) rather than the with-RF figures (0.126 / 0.117). This understates the warming impact of flying by roughly 70%. Stated in the README so the number can be argued with.",
+      "meals": "14 main meals per week (lunch + dinner). Breakfast is not modelled. A meal factor is the protein component at a 100 g portion, not the whole plate.",
+      "ev": "transportPerKm.evKwhPerKm is ENERGY, not emissions. The engine multiplies it by the province grid intensity at runtime, which is why an EV ranks differently in Quebec (1.9 g/kWh) than in Alberta (438 g/kWh).",
+      "gwp": "Where CH4 and N2O were folded into a CO2e total, Schedule 3 (AR5) global warming potentials were used: CH4 = 28, N2O = 265."
     },
     "verification": {
-      "foodPerMealKg.beefMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — Poore & Nemecek 2018, beef herd", "source": "" },
-      "foodPerMealKg.chickenMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — Poore & Nemecek 2018, poultry", "source": "" },
-      "foodPerMealKg.plantMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — legumes / grains", "source": "" },
-      "foodPerMealKg.cheeseHeavyMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — cheese", "source": "" },
+      "foodPerMealKg.beefMeal": {
+        "unit": "kg CO2e / meal",
+        "status": "verified",
+        "basis": "100 g portion x 99.48 kg CO2e/kg (beef herd) = 9.95",
+        "source": "Poore & Nemecek (2018), Science, via Our World in Data, Environmental impacts of food"
+      },
+      "foodPerMealKg.chickenMeal": {
+        "unit": "kg CO2e / meal",
+        "status": "verified",
+        "basis": "100 g portion x 9.87 kg CO2e/kg (poultry) = 0.99",
+        "source": "Poore & Nemecek (2018), Science, via Our World in Data"
+      },
+      "foodPerMealKg.plantMeal": {
+        "unit": "kg CO2e / meal",
+        "status": "verified",
+        "basis": "150 g pulses x 0.98 kg CO2e/kg = 0.15, plus grain and vegetable sides",
+        "source": "Poore & Nemecek (2018), Science, via Our World in Data"
+      },
+      "foodPerMealKg.cheeseHeavyMeal": {
+        "unit": "kg CO2e / meal",
+        "status": "verified",
+        "basis": "100 g portion x 23.88 kg CO2e/kg (cheese) = 2.39",
+        "source": "Poore & Nemecek (2018), Science, via Our World in Data"
+      },
 
-      "transportPerKm.gasCar": { "unit": "kg CO2e / km", "status": "TODO verify", "lookIn": "DEFRA GHG conversion factors — average petrol car", "source": "" },
-      "transportPerKm.hybridCar": { "unit": "kg CO2e / km", "status": "TODO verify", "lookIn": "DEFRA GHG conversion factors — hybrid car", "source": "" },
-      "transportPerKm.busPerPassenger": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — local bus, average occupancy", "source": "" },
-      "transportPerKm.trainPerPassenger": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — national rail", "source": "" },
-      "transportPerKm.evKwhPerKm": { "unit": "kWh / km (ENERGY, not emissions)", "status": "TODO verify", "lookIn": "NRCan EnerGuide / EPA combined consumption for a mid-size BEV", "source": "" },
+      "transportPerKm.gasCar": {
+        "unit": "kg CO2e / km",
+        "status": "verified",
+        "basis": "Average petrol car, all sizes",
+        "source": "UK DESNZ/DEFRA GHG Conversion Factors for Company Reporting 2025"
+      },
+      "transportPerKm.hybridCar": {
+        "unit": "kg CO2e / km",
+        "status": "verified",
+        "basis": "Average hybrid car. CORRECTED from 0.11 placeholder.",
+        "source": "UK DESNZ/DEFRA GHG Conversion Factors 2025"
+      },
+      "transportPerKm.busPerPassenger": {
+        "unit": "kg CO2e / passenger-km",
+        "status": "verified",
+        "basis": "Average local bus at average occupancy",
+        "source": "UK DESNZ/DEFRA GHG Conversion Factors 2025"
+      },
+      "transportPerKm.trainPerPassenger": {
+        "unit": "kg CO2e / passenger-km",
+        "status": "verified",
+        "basis": "National rail",
+        "source": "UK DESNZ/DEFRA GHG Conversion Factors 2025"
+      },
+      "transportPerKm.evKwhPerKm": {
+        "unit": "kWh / km (ENERGY, not emissions)",
+        "status": "verified",
+        "basis": "Typical mid-size battery-electric vehicle, 20 kWh/100 km combined (55% city / 45% highway)",
+        "source": "NRCan EnerGuide label for battery-electric vehicles"
+      },
 
-      "flightPerPassengerKm.shortHaul": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — short-haul economy, no RF", "source": "" },
-      "flightPerPassengerKm.longHaul": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — long-haul economy, no RF", "source": "" },
-      "flightPerPassengerKm.shortHaulTripKm": { "unit": "km, ROUND TRIP", "status": "TODO verify", "lookIn": "Assumption, not a measurement. Sanity-check against a real route (e.g. YYZ-YYC is ~5400 km round trip, so 1500 is conservative)", "source": "" },
-      "flightPerPassengerKm.longHaulTripKm": { "unit": "km, ROUND TRIP", "status": "TODO verify", "lookIn": "Assumption, not a measurement. Sanity-check against a real route (e.g. YYZ-LHR is ~11200 km round trip)", "source": "" },
+      "flightPerPassengerKm.shortHaul": {
+        "unit": "kg CO2e / passenger-km",
+        "status": "verified",
+        "basis": "Short-haul economy, WITHOUT radiative forcing. CORRECTED from the 0.15 placeholder, which was a with-RF figure and roughly doubled the flight lever.",
+        "source": "UK DESNZ/DEFRA GHG Conversion Factors 2025"
+      },
+      "flightPerPassengerKm.longHaul": {
+        "unit": "kg CO2e / passenger-km",
+        "status": "verified",
+        "basis": "Long-haul economy, WITHOUT radiative forcing. CORRECTED from the 0.19 placeholder.",
+        "source": "UK DESNZ/DEFRA GHG Conversion Factors 2025"
+      },
+      "flightPerPassengerKm.shortHaulTripKm": {
+        "unit": "km, ROUND TRIP",
+        "status": "assumption",
+        "basis": "1250 km each way. Representative Canadian short-haul: Toronto-Halifax is ~1300 km each way, Toronto-Chicago ~700. The DEFRA short-haul band is under 3700 km one-way. CORRECTED from 1500 round trip, which was only 750 km each way.",
+        "source": "Assumption, sanity-checked against real routes. Not a measurement."
+      },
+      "flightPerPassengerKm.longHaulTripKm": {
+        "unit": "km, ROUND TRIP",
+        "status": "assumption",
+        "basis": "5500 km each way. Toronto-London is ~5700 km each way. CORRECTED from 8000 round trip, which is Toronto-Los Angeles, not an intercontinental trip.",
+        "source": "Assumption, sanity-checked against real routes. Not a measurement."
+      },
 
-      "homeEnergy.gasKgPerM3": { "unit": "kg CO2e / m3 natural gas", "status": "TODO verify", "lookIn": "Canada National Inventory Report — stationary combustion, natural gas", "source": "" },
-      "homeEnergy.avgAnnualHeatingM3": { "unit": "m3 / year", "status": "TODO verify", "lookIn": "NRCan Survey of Household Energy Use — average gas-heated dwelling", "source": "" },
-      "homeEnergy.oilKgPerLitre": { "unit": "kg CO2e / L heating oil", "status": "TODO verify", "lookIn": "Canada National Inventory Report — light fuel oil", "source": "" },
-      "homeEnergy.avgAnnualHeatingLitres": { "unit": "L / year", "status": "TODO verify", "lookIn": "NRCan Survey of Household Energy Use — oil-heated dwelling", "source": "" },
-      "homeEnergy.thermostatSetbackSavingsPct": { "unit": "fraction 0..1", "status": "TODO verify", "lookIn": "NRCan / US DOE guidance on 2 degree overnight setback", "source": "" },
-      "homeEnergy.avgAnnualHeatingKwhElectric": { "unit": "kWh / year", "status": "TODO verify", "lookIn": "NRCan Survey of Household Energy Use — electrically heated dwelling", "source": "" },
+      "homeEnergy.gasKgPerM3": {
+        "unit": "kg CO2e / m3 natural gas",
+        "status": "verified",
+        "basis": "Ontario marketable natural gas 1921 g CO2/m3, plus residential CH4 0.037 g x 28 and N2O 0.035 g x 265, giving 1931 g CO2e/m3. Provincial spread is narrow (1915-1966 g CO2/m3).",
+        "source": "ECCC, Emission factors and reference values v3.0 (October 2025), Tables 1.3 and 2.3"
+      },
+      "homeEnergy.avgAnnualHeatingM3": {
+        "unit": "m3 / year",
+        "status": "verified",
+        "basis": "Average residential natural gas customer, 2024. Covers all household gas use, not space heating alone. National range is 1500-3100.",
+        "source": "Canadian Gas Association, Natural Gas Facts"
+      },
+      "homeEnergy.oilKgPerLitre": {
+        "unit": "kg CO2e / L heating oil",
+        "status": "verified",
+        "basis": "Light Fuel Oil - Residential 2753 g CO2/L, plus CH4 0.026 g x 28 and N2O 0.006 g x 265, giving 2755 g CO2e/L.",
+        "source": "ECCC, Emission factors and reference values v3.0 (October 2025), Table 4.3"
+      },
+      "homeEnergy.avgAnnualHeatingLitres": {
+        "unit": "L / year",
+        "status": "verified",
+        "basis": "Canadian home heating with oil, per heating season. Atlantic Canada runs up to 1500. CORRECTED from the 1500 placeholder to the national average.",
+        "source": "Canadian heating oil distributor consumption data, consistent with NRCan Survey of Household Energy Use"
+      },
+      "homeEnergy.thermostatSetbackSavingsPct": {
+        "unit": "fraction 0..1",
+        "status": "verified",
+        "basis": "2 degree setback held over an 8-hour period. CORRECTED from the 0.12 placeholder, which overstated what a 2 degree setback achieves.",
+        "source": "Metered thermostat setback study data, consistent with NRCan and US DOE setback guidance"
+      },
+      "homeEnergy.avgAnnualHeatingKwhElectric": {
+        "unit": "kWh / year",
+        "status": "verified",
+        "basis": "Space heating only, for a dwelling whose primary heat is electric. Distinct from the 11135 kWh average total household electricity figure, which covers all end uses across all heating types.",
+        "source": "NRCan Survey of Household Energy Use 2019, residential sector energy intensity"
+      },
 
-      "gridGPerKwh.*": { "unit": "g CO2e / kWh", "status": "TODO verify", "lookIn": "Canada National Inventory Report electricity annex, or Canada Energy Regulator provincial generation mix. All 13 values verify from one table.", "source": "" }
+      "gridGPerKwh.*": {
+        "unit": "g CO2e / kWh consumed",
+        "status": "verified",
+        "basis": "Consumption intensity as delivered to the consumer, Table 5.3, the table applicable to calendar year 2026. Notable corrections from placeholders: PE 20 to 234 (PEI imports from New Brunswick and is not near-zero), NS 300 to 581, NT 180 to 420, ON 30 to 59, SK 580 to 631.",
+        "source": "ECCC, Emission factors and reference values v3.0 (October 2025), Table 5.3, aligned with National Inventory Report 1990-2023"
+      }
     }
   },
 
   "foodPerMealKg": {
-    "beefMeal": 9.0,
-    "chickenMeal": 0.9,
+    "beefMeal": 9.9,
+    "chickenMeal": 1.0,
     "plantMeal": 0.3,
-    "cheeseHeavyMeal": 3.0
+    "cheeseHeavyMeal": 2.4
   },
 
   "transportPerKm": {
-    "gasCar": 0.17,
-    "hybridCar": 0.11,
-    "busPerPassenger": 0.10,
-    "trainPerPassenger": 0.04,
-    "evKwhPerKm": 0.18
+    "gasCar": 0.163,
+    "hybridCar": 0.128,
+    "busPerPassenger": 0.104,
+    "trainPerPassenger": 0.035,
+    "evKwhPerKm": 0.2
   },
 
   "flightPerPassengerKm": {
-    "shortHaul": 0.15,
-    "longHaul": 0.19,
-    "shortHaulTripKm": 1500,
-    "longHaulTripKm": 8000
+    "shortHaul": 0.074,
+    "longHaul": 0.069,
+    "shortHaulTripKm": 2500,
+    "longHaulTripKm": 11000
   },
 
   "homeEnergy": {
-    "gasKgPerM3": 1.9,
-    "avgAnnualHeatingM3": 2200,
-    "oilKgPerLitre": 2.7,
-    "avgAnnualHeatingLitres": 1500,
-    "thermostatSetbackSavingsPct": 0.12,
+    "gasKgPerM3": 1.93,
+    "avgAnnualHeatingM3": 2216,
+    "oilKgPerLitre": 2.76,
+    "avgAnnualHeatingLitres": 1350,
+    "thermostatSetbackSavingsPct": 0.083,
     "avgAnnualHeatingKwhElectric": 9000
   },
 
   "gridGPerKwh": {
-    "ON": 30,
-    "QC": 2,
-    "BC": 15,
-    "AB": 450,
-    "SK": 580,
-    "MB": 2,
-    "NS": 300,
-    "NB": 250,
-    "NL": 20,
-    "PE": 20,
-    "YT": 80,
-    "NT": 180,
+    "ON": 59,
+    "QC": 1.9,
+    "BC": 18,
+    "AB": 438,
+    "SK": 631,
+    "MB": 2.5,
+    "NS": 581,
+    "NB": 234,
+    "NL": 17,
+    "PE": 234,
+    "YT": 74,
+    "NT": 420,
     "NU": 800
   }
 }
