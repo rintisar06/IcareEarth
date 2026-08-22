@@ -1,0 +1,84 @@
+{
+  "_meta": {
+    "status": "PLACEHOLDER — every number in this file is an unverified ballpark. Results are not trustworthy until the entries below are checked and _meta.verification statuses are flipped.",
+    "conventions": {
+      "units": "All emission outputs are kg CO2e unless the key name says otherwise.",
+      "flights": "No radiative forcing multiplier is applied. This understates the warming impact of flying by roughly 2x. The convention is stated in the README so the number can be argued with.",
+      "meals": "14 main meals per week (lunch + dinner). Breakfast is not modelled.",
+      "ev": "transportPerKm.evKwhPerKm is energy, not emissions. The engine multiplies it by the province's grid intensity at runtime, which is why an EV ranks differently in Quebec than in Alberta."
+    },
+    "verification": {
+      "foodPerMealKg.beefMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — Poore & Nemecek 2018, beef herd", "source": "" },
+      "foodPerMealKg.chickenMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — Poore & Nemecek 2018, poultry", "source": "" },
+      "foodPerMealKg.plantMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — legumes / grains", "source": "" },
+      "foodPerMealKg.cheeseHeavyMeal": { "unit": "kg CO2e / meal", "status": "TODO verify", "lookIn": "Our World in Data — cheese", "source": "" },
+
+      "transportPerKm.gasCar": { "unit": "kg CO2e / km", "status": "TODO verify", "lookIn": "DEFRA GHG conversion factors — average petrol car", "source": "" },
+      "transportPerKm.hybridCar": { "unit": "kg CO2e / km", "status": "TODO verify", "lookIn": "DEFRA GHG conversion factors — hybrid car", "source": "" },
+      "transportPerKm.busPerPassenger": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — local bus, average occupancy", "source": "" },
+      "transportPerKm.trainPerPassenger": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — national rail", "source": "" },
+      "transportPerKm.evKwhPerKm": { "unit": "kWh / km (ENERGY, not emissions)", "status": "TODO verify", "lookIn": "NRCan EnerGuide / EPA combined consumption for a mid-size BEV", "source": "" },
+
+      "flightPerPassengerKm.shortHaul": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — short-haul economy, no RF", "source": "" },
+      "flightPerPassengerKm.longHaul": { "unit": "kg CO2e / passenger-km", "status": "TODO verify", "lookIn": "DEFRA — long-haul economy, no RF", "source": "" },
+      "flightPerPassengerKm.shortHaulTripKm": { "unit": "km, ROUND TRIP", "status": "TODO verify", "lookIn": "Assumption, not a measurement. Sanity-check against a real route (e.g. YYZ-YYC is ~5400 km round trip, so 1500 is conservative)", "source": "" },
+      "flightPerPassengerKm.longHaulTripKm": { "unit": "km, ROUND TRIP", "status": "TODO verify", "lookIn": "Assumption, not a measurement. Sanity-check against a real route (e.g. YYZ-LHR is ~11200 km round trip)", "source": "" },
+
+      "homeEnergy.gasKgPerM3": { "unit": "kg CO2e / m3 natural gas", "status": "TODO verify", "lookIn": "Canada National Inventory Report — stationary combustion, natural gas", "source": "" },
+      "homeEnergy.avgAnnualHeatingM3": { "unit": "m3 / year", "status": "TODO verify", "lookIn": "NRCan Survey of Household Energy Use — average gas-heated dwelling", "source": "" },
+      "homeEnergy.oilKgPerLitre": { "unit": "kg CO2e / L heating oil", "status": "TODO verify", "lookIn": "Canada National Inventory Report — light fuel oil", "source": "" },
+      "homeEnergy.avgAnnualHeatingLitres": { "unit": "L / year", "status": "TODO verify", "lookIn": "NRCan Survey of Household Energy Use — oil-heated dwelling", "source": "" },
+      "homeEnergy.thermostatSetbackSavingsPct": { "unit": "fraction 0..1", "status": "TODO verify", "lookIn": "NRCan / US DOE guidance on 2 degree overnight setback", "source": "" },
+      "homeEnergy.avgAnnualHeatingKwhElectric": { "unit": "kWh / year", "status": "TODO verify", "lookIn": "NRCan Survey of Household Energy Use — electrically heated dwelling", "source": "" },
+
+      "gridGPerKwh.*": { "unit": "g CO2e / kWh", "status": "TODO verify", "lookIn": "Canada National Inventory Report electricity annex, or Canada Energy Regulator provincial generation mix. All 13 values verify from one table.", "source": "" }
+    }
+  },
+
+  "foodPerMealKg": {
+    "beefMeal": 9.0,
+    "chickenMeal": 0.9,
+    "plantMeal": 0.3,
+    "cheeseHeavyMeal": 3.0
+  },
+
+  "transportPerKm": {
+    "gasCar": 0.17,
+    "hybridCar": 0.11,
+    "busPerPassenger": 0.10,
+    "trainPerPassenger": 0.04,
+    "evKwhPerKm": 0.18
+  },
+
+  "flightPerPassengerKm": {
+    "shortHaul": 0.15,
+    "longHaul": 0.19,
+    "shortHaulTripKm": 1500,
+    "longHaulTripKm": 8000
+  },
+
+  "homeEnergy": {
+    "gasKgPerM3": 1.9,
+    "avgAnnualHeatingM3": 2200,
+    "oilKgPerLitre": 2.7,
+    "avgAnnualHeatingLitres": 1500,
+    "thermostatSetbackSavingsPct": 0.12,
+    "avgAnnualHeatingKwhElectric": 9000
+  },
+
+  "gridGPerKwh": {
+    "ON": 30,
+    "QC": 2,
+    "BC": 15,
+    "AB": 450,
+    "SK": 580,
+    "MB": 2,
+    "NS": 300,
+    "NB": 250,
+    "NL": 20,
+    "PE": 20,
+    "YT": 80,
+    "NT": 180,
+    "NU": 800
+  }
+}
