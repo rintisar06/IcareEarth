@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" width="1040" height="240">
+  
+  <rect width="520" height="120" rx="0" fill="#0C1A14"></rect>
+  <g transform="translate(16,28) scale(1.1)">
+  <path d="M2 46 A30 30 0 0 1 62 46" fill="none" stroke="#FBF9F4" stroke-width="4" stroke-linecap="round"></path>
+  <path d="M11 46 A21 21 0 0 1 53 46" fill="none" stroke="#FBF9F4" stroke-width="4" stroke-linecap="round" opacity="0.55"></path>
+  <path d="M20 46 A12 12 0 0 1 44 46" fill="none" stroke="#FBF9F4" stroke-width="4" stroke-linecap="round" opacity="0.28"></path>
+  <path d="M32 8 C46 16, 46 34, 32 42 C18 34, 18 16, 32 8 Z" fill="#7FB069"></path>
+  <path d="M32 42 L32 12" stroke="#0C1A14" stroke-width="2" stroke-linecap="round" opacity="0.5"></path>
+  <path d="M32 26 L40 19 M32 32 L24 25" stroke="#0C1A14" stroke-width="1.6" stroke-linecap="round" opacity="0.4"></path>
+  </g>
+  <text x="106" y="76" font-family="Sora, sans-serif" font-size="48" letter-spacing="-1.4" fill="#FBF9F4"><tspan font-weight="200">Icare</tspan><tspan font-weight="700">Earth</tspan></text>
+</svg>

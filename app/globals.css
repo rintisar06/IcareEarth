@@ -1,15 +1,19 @@
 @import "tailwindcss";
 
+/* Brand palette taken from the logo: deep green #14503A, leaf #7FB069,
+   near-black #0C1A14. */
 :root {
-  --background: #fbfbf9;
-  --foreground: #16181c;
+  --background: #fbfaf6;
+  --foreground: #0c1a14;
   --surface: #ffffff;
-  --border: #e3e3dd;
-  --muted: #6b7078;
-  --accent: #1f7a4d;
-  --accent-soft: #e8f2ec;
+  --border: #e2e4dc;
+  --muted: #66705f;
+  --accent: #14503a;
+  --accent-soft: #e7f0e9;
   --accent-fg: #ffffff;
+  --leaf: #7fb069;
   --warm: #b4622a;
+  --shadow: 0 1px 2px rgb(12 26 20 / 0.04), 0 8px 24px -12px rgb(12 26 20 / 0.12);
 }
 
 @theme inline {
@@ -21,22 +25,26 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-fg: var(--accent-fg);
+  --color-leaf: var(--leaf);
   --color-warm: var(--warm);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-sora);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0d0f11;
-    --foreground: #ededed;
-    --surface: #16191c;
-    --border: #2a2e33;
-    --muted: #9aa1aa;
-    --accent: #4ba97a;
+    --background: #0a0f0c;
+    --foreground: #e9ede9;
+    --surface: #121a16;
+    --border: #22302a;
+    --muted: #93a099;
+    --accent: #7fb069;
     --accent-soft: #16261e;
     --accent-fg: #08120c;
+    --leaf: #9ac98a;
     --warm: #d98a52;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
   }
 }
 
@@ -46,40 +54,86 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Buttons people tap through the whole interview. Kept here so the interview,
-   the form, and the results page cannot drift apart. */
+/* Headings carry the wordmark's typeface so the brand reads beyond the logo. */
+h1,
+h2,
+.font-display {
+  font-family: var(--font-sora), var(--font-geist-sans), system-ui, sans-serif;
+}
+
 @utility btn-choice {
   width: 100%;
   text-align: left;
-  border-radius: 0.75rem;
+  border-radius: 0.85rem;
   border: 1px solid var(--border);
   background: var(--surface);
   padding: 0.875rem 1rem;
   font-size: 0.975rem;
   line-height: 1.4;
-  transition: border-color 120ms ease, background 120ms ease;
+  box-shadow: var(--shadow);
+  transition:
+    border-color 140ms ease,
+    background 140ms ease,
+    transform 140ms ease;
 }
 
 @utility btn-primary {
-  border-radius: 0.75rem;
+  border-radius: 0.85rem;
   background: var(--accent);
   color: var(--accent-fg);
-  padding: 0.8rem 1.35rem;
+  padding: 0.85rem 1.5rem;
   font-weight: 600;
-  transition: opacity 120ms ease;
+  box-shadow: var(--shadow);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+@utility card {
+  border-radius: 1.1rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 @media (hover: hover) {
   .btn-choice:hover {
     border-color: var(--accent);
     background: var(--accent-soft);
+    transform: translateY(-1px);
   }
   .btn-primary:hover {
-    opacity: 0.9;
+    opacity: 0.92;
+    transform: translateY(-1px);
   }
 }
 
-.btn-choice:active {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+.btn-choice:active,
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* A soft leaf-tinted wash behind the landing hero. */
+.hero-wash {
+  position: relative;
+}
+.hero-wash::before {
+  content: "";
+  position: absolute;
+  inset: -12% -30% auto -30%;
+  height: 60vh;
+  z-index: -1;
+  background: radial-gradient(
+    60% 50% at 30% 20%,
+    color-mix(in oklab, var(--leaf) 22%, transparent),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

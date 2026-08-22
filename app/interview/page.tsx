@@ -11,6 +11,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { useRouter } from "next/navigation";
 import {
   applyAnswer,
@@ -152,12 +153,7 @@ export default function InterviewPage() {
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 py-8 sm:py-12">
       <header className="mb-8">
-        <Link
-          href="/"
-          className="text-sm font-semibold tracking-tight text-muted hover:text-foreground"
-        >
-          IcareEarth
-        </Link>
+        <Logo />
 
         <div className="mt-5 flex items-center gap-3">
           <div

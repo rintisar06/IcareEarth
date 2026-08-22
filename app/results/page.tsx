@@ -10,6 +10,7 @@
 import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import Logo from "@/components/Logo";
 import { useRouter } from "next/navigation";
 import factorsJson from "@/lib/factors.json";
 import {
@@ -234,12 +235,7 @@ export default function ResultsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-8 sm:py-12">
-      <Link
-        href="/"
-        className="text-sm font-semibold tracking-tight text-muted hover:text-foreground"
-      >
-        IcareEarth
-      </Link>
+      <Logo />
 
       <section className="mt-7">
         <h1 className="text-sm font-medium text-muted">Your footprint</h1>

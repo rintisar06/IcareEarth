@@ -10,7 +10,7 @@
  */
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import Logo from "@/components/Logo";
 import { useRouter } from "next/navigation";
 import {
   FIELD_OPTIONS,
@@ -145,12 +145,7 @@ export default function FormPage() {
 
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-5 py-8 sm:py-12">
-      <Link
-        href="/"
-        className="text-sm font-semibold tracking-tight text-muted hover:text-foreground"
-      >
-        IcareEarth
-      </Link>
+      <Logo />
 
       <h1 className="mt-6 text-2xl font-semibold tracking-tight sm:text-3xl">
         Tell us about your life
