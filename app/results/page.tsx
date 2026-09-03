@@ -199,6 +199,7 @@ export default function ResultsPage() {
   const router = useRouter();
   const stored = useProfile();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   // No profile means someone typed the URL straight in. Send them to the start.
   useEffect(() => {
@@ -250,6 +251,9 @@ export default function ResultsPage() {
   // Defaults to the biggest lever without an effect having to select it.
   const selected =
     levers.find((l) => l.intervention.id === selectedId) ?? top[0];
+  // Results lead with three; the rest are one tap away rather than hidden.
+  const visible = showAll ? levers : top;
+  const hiddenCount = levers.length - top.length;
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-8 sm:py-12">
@@ -306,7 +310,7 @@ export default function ResultsPage() {
         </p>
 
         <ul className="mt-5 space-y-3">
-          {top.map((lever, index) => {
+          {visible.map((lever, index) => {
             const isSelected =
               lever.intervention.id === selected?.intervention.id;
             return (
@@ -351,6 +355,19 @@ export default function ResultsPage() {
             );
           })}
         </ul>
+
+        {hiddenCount > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            aria-expanded={showAll}
+            className="mt-4 inline-flex min-h-11 items-center text-sm font-medium text-accent underline underline-offset-4"
+          >
+            {showAll
+              ? `Show just the top ${top.length}`
+              : `Show the other ${hiddenCount} that apply to you`}
+          </button>
+        )}
       </section>
       )}
 

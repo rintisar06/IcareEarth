@@ -21,6 +21,7 @@ import {
   normalizeProfile,
   optionsFor,
   parseInterviewResponse,
+  profileProgress,
   type DeepPartialProfile,
   type InterviewQuestion,
 } from "../lib/interview.ts";
@@ -375,5 +376,54 @@ describe("FIELD_OPTIONS — we own the closed sets, not the model", () => {
       optionsFor(q).map((o) => o.value),
       ["Yes", "No"],
     );
+  });
+});
+
+describe("profileProgress — honest about what is left", () => {
+  it("starts at zero", () => {
+    assert.equal(profileProgress({}), 0);
+  });
+
+  it("reaches 1 on a complete profile", () => {
+    assert.equal(
+      profileProgress({
+        transport: { mode: "car", weeklyKm: 100, vehicleType: "gas" },
+        diet: { pattern: "omnivore", redMeatMealsPerWeek: 3, dairyLevel: "low" },
+        home: { heatingType: "gas", province: "ON", thermostatSetback: false },
+        flights: { perYear: 1, typicalDistance: "short" },
+      }),
+      1,
+    );
+  });
+
+  it("jumps forward when an answer removes later questions", () => {
+    const driving = profileProgress({ transport: { mode: "car" } });
+    const walking = profileProgress({ transport: { mode: "none" } });
+    assert.ok(
+      walking > driving,
+      "saying you have no car removes two questions, so the bar should move further",
+    );
+  });
+
+  it("stops demanding red meat counts once someone says vegan", () => {
+    const omnivore = profileProgress({ diet: { pattern: "omnivore" } });
+    const vegan = profileProgress({ diet: { pattern: "vegan" } });
+    assert.ok(vegan > omnivore);
+  });
+
+  it("only counts haul length once someone says they fly", () => {
+    const flyer = profileProgress({ flights: { perYear: 3 } });
+    const grounded = profileProgress({ flights: { perYear: 0 } });
+    assert.ok(grounded > flyer);
+  });
+
+  it("never exceeds 1", () => {
+    const p = profileProgress({
+      transport: { mode: "none", weeklyKm: 0, vehicleType: "none" },
+      diet: { pattern: "vegan", redMeatMealsPerWeek: 0, dairyLevel: "low" },
+      home: { heatingType: "none", province: "QC", thermostatSetback: true },
+      flights: { perYear: 0, typicalDistance: "short" },
+    });
+    assert.ok(p <= 1);
   });
 });

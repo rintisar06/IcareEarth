@@ -312,6 +312,42 @@ export function isProfileComplete(p: DeepPartialProfile): p is UserProfile {
 }
 
 /**
+ * How far through the interview this profile actually is, 0..1.
+ *
+ * Counted from the facts still outstanding rather than a fixed question count,
+ * because what is outstanding depends on the answers: saying you have no car
+ * genuinely removes two questions, and a bar that ignored that would keep
+ * promising work that is never coming.
+ */
+export function profileProgress(p: DeepPartialProfile): number {
+  const required: boolean[] = [
+    p.transport?.mode !== undefined,
+    p.diet?.pattern !== undefined,
+    p.home?.heatingType !== undefined,
+    isProvince(p.home?.province),
+    typeof p.home?.thermostatSetback === "boolean",
+    typeof p.flights?.perYear === "number",
+  ];
+
+  if (p.transport?.mode !== undefined && p.transport.mode !== "none") {
+    required.push(typeof p.transport.weeklyKm === "number");
+    required.push(p.transport.vehicleType !== undefined);
+  }
+  if (p.diet?.pattern === "omnivore") {
+    required.push(typeof p.diet.redMeatMealsPerWeek === "number");
+  }
+  if (p.diet?.pattern !== undefined && p.diet.pattern !== "vegan") {
+    required.push(p.diet.dairyLevel !== undefined);
+  }
+  if (typeof p.flights?.perYear === "number" && p.flights.perYear > 0) {
+    required.push(p.flights.typicalDistance !== undefined);
+  }
+
+  const filled = required.filter(Boolean).length;
+  return required.length === 0 ? 0 : filled / required.length;
+}
+
+/**
  * Fill the gaps a complete-enough profile can leave, so the engine always gets
  * a fully-formed UserProfile.
  */

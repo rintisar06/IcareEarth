@@ -20,6 +20,7 @@ import {
   isProfileComplete,
   mergeProfile,
   optionsFor,
+  profileProgress,
   type DeepPartialProfile,
   type HistoryEntry,
   type InterviewQuestion,
@@ -32,8 +33,6 @@ interface Snapshot {
   history: HistoryEntry[];
   question: InterviewQuestion;
 }
-
-const EXPECTED_QUESTIONS = 8;
 
 export default function InterviewPage() {
   const router = useRouter();
@@ -93,9 +92,13 @@ export default function InterviewPage() {
           // The data decides this, not the model. If it claims complete while
           // categories are still missing, believing it would hand the engine
           // defaults the person never chose and present the result as theirs.
+          // Via /review, not straight to results: these answers came out of a
+          // model, so the person confirms we heard them right before we compute
+          // anything on them. (The form goes straight through — someone who
+          // just filled it in has already seen every answer.)
           if (isProfileComplete(merged)) {
             storeProfile(merged);
-            router.replace("/results");
+            router.replace("/review");
             return;
           }
 
@@ -167,8 +170,9 @@ export default function InterviewPage() {
     setNumberInput("");
   }
 
-  const step = Math.min(history.length + 1, EXPECTED_QUESTIONS);
-  const progress = Math.min(history.length / EXPECTED_QUESTIONS, 0.95);
+  // Progress reflects what is actually still missing, not a question count.
+  // Answering "no car" removes two questions, and the bar should show that.
+  const progress = Math.min(profileProgress(profile), 0.97);
 
   return (
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 py-8 sm:py-12">
@@ -179,9 +183,10 @@ export default function InterviewPage() {
           <div
             className="h-1.5 flex-1 overflow-hidden rounded-full bg-border"
             role="progressbar"
-            aria-valuenow={history.length}
+            aria-valuenow={Math.round(progress * 100)}
             aria-valuemin={0}
-            aria-valuemax={EXPECTED_QUESTIONS}
+            aria-valuemax={100}
+            aria-label="How much of your profile is complete"
           >
             <div
               className="h-full rounded-full bg-accent transition-[width] duration-500"
@@ -189,7 +194,7 @@ export default function InterviewPage() {
             />
           </div>
           <span className="shrink-0 text-xs tabular-nums text-muted">
-            {step} of ~{EXPECTED_QUESTIONS}
+            {Math.round(progress * 100)}%
           </span>
         </div>
       </header>
