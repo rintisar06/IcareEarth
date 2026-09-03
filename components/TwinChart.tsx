@@ -61,7 +61,9 @@ export default function TwinChart({
               type="button"
               onClick={() => setYears(h)}
               aria-pressed={years === h}
-              className={`rounded-lg border px-3 py-1.5 text-xs font-medium ${
+              // min-h-11 keeps these a comfortable 44px touch target; they are
+              // the most-tapped controls on the page.
+              className={`min-h-11 rounded-lg border px-3.5 text-xs font-medium ${
                 years === h
                   ? "border-accent bg-accent-soft text-foreground"
                   : "border-border text-muted"

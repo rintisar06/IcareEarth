@@ -163,7 +163,7 @@ function PlanSection({
             onClick={() => {
               void navigator.clipboard?.writeText(plan).then(() => setCopied(true));
             }}
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted"
+            className="min-h-11 rounded-lg border border-border px-3.5 text-xs font-medium text-muted"
           >
             {copied ? "Copied" : "Copy"}
           </button>
@@ -362,7 +362,7 @@ export default function ResultsPage() {
       <div className="mt-9">
         <Link
           href="/form"
-          className="text-sm text-muted underline underline-offset-4"
+          className="inline-flex min-h-11 items-center text-sm text-muted underline underline-offset-4"
         >
           Change my answers
         </Link>

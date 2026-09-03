@@ -12,7 +12,10 @@
   --accent-soft: #e7f0e9;
   --accent-fg: #ffffff;
   --leaf: #7fb069;
-  --warm: #b4622a;
+  /* Darkened from #b4622a, which measured 4.26 against the page background and
+     failed WCAG AA for body text — it carries the electric-heating warning on
+     the form. This reads 4.69. */
+  --warm: #ab5c26;
   --shadow: 0 1px 2px rgb(12 26 20 / 0.04), 0 8px 24px -12px rgb(12 26 20 / 0.12);
 }
 
@@ -46,6 +49,18 @@
     --warm: #d98a52;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
   }
+}
+
+/* The hero wash is deliberately wider than the content column so it bleeds
+   past it. At 375px that pushed the document to 488px and the whole landing
+   page scrolled sideways. Clip the decoration at the screen edge.
+
+   This has to sit on the root: overflow set only on body propagates to the
+   viewport instead of clipping, so body stays visible and the glow still
+   escapes. `clip` over `hidden` so nothing becomes a scroll container. */
+html {
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -111,6 +126,19 @@ h2,
 .btn-choice:active,
 .btn-primary:active {
   transform: translateY(0);
+}
+
+/* Keyboard users got no indication of where they were. :focus-visible keeps
+   the ring off mouse clicks. */
+.btn-choice:focus-visible,
+.btn-primary:focus-visible,
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
 }
 
 /* A soft leaf-tinted wash behind the landing hero. */

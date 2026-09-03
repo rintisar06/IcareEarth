@@ -48,6 +48,7 @@ export default function InterviewPage() {
   const [retrying, setRetrying] = useState(false);
 
   const started = useRef(false);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   const goToForm = useCallback(
     (carry: DeepPartialProfile) => {
@@ -128,6 +129,15 @@ export default function InterviewPage() {
     void advance({}, []);
   }, [advance]);
 
+  /**
+   * Move focus to each new question. Without this, a keyboard or screen-reader
+   * user answers one question and focus collapses to the top of the document,
+   * with no signal that anything replaced it.
+   */
+  useEffect(() => {
+    if (question) headingRef.current?.focus();
+  }, [question]);
+
   function submit(rawValue: string | number | boolean, answerLabel: string) {
     if (!question || loading) return;
 
@@ -206,7 +216,11 @@ export default function InterviewPage() {
           </div>
         ) : (
           <>
-            <h1 className="text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
+            <h1
+              ref={headingRef}
+              tabIndex={-1}
+              className="text-2xl font-semibold leading-snug tracking-tight outline-none sm:text-3xl"
+            >
               {question.text}
             </h1>
 
