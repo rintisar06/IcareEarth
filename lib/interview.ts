@@ -221,6 +221,17 @@ export function clampNumber(profileField: string, value: number): number {
   return Math.min(Math.max(value, bounds.min), bounds.max);
 }
 
+/**
+ * The bounds for a field, so inputs can advertise them rather than silently
+ * rewriting what someone typed. A number that changes under your fingers with
+ * no explanation reads as a bug.
+ */
+export function numberBounds(
+  profileField: string,
+): { min: number; max: number } | null {
+  return NUMBER_BOUNDS[profileField] ?? null;
+}
+
 // ---------------------------------------------------------------------------
 // Profile assembly
 // ---------------------------------------------------------------------------

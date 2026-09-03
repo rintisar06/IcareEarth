@@ -19,6 +19,7 @@ import {
   isFallback,
   isProfileComplete,
   mergeProfile,
+  numberBounds,
   optionsFor,
   profileProgress,
   type DeepPartialProfile,
@@ -278,12 +279,30 @@ export default function InterviewPage() {
                     <span className="sr-only">{question.text}</span>
                     <input
                       autoFocus
+                      type="number"
                       inputMode="numeric"
+                      min={numberBounds(question.profileField)?.min}
+                      max={numberBounds(question.profileField)?.max}
                       value={numberInput}
                       onChange={(event) => setNumberInput(event.target.value)}
                       placeholder={question.unit ?? "0"}
                       className="w-full rounded-xl border border-border bg-surface px-4 py-3.5 text-base outline-none focus:border-accent"
                     />
+                    {(() => {
+                      // Warn before we rewrite it, not after.
+                      const bounds = numberBounds(question.profileField);
+                      const parsed = Number(numberInput);
+                      const willClamp =
+                        bounds &&
+                        numberInput.trim() !== "" &&
+                        Number.isFinite(parsed) &&
+                        (parsed < bounds.min || parsed > bounds.max);
+                      return willClamp ? (
+                        <span className="mt-1.5 block text-sm text-warm" role="status">
+                          We keep this between {bounds.min} and {bounds.max}.
+                        </span>
+                      ) : null;
+                    })()}
                   </label>
                   <button type="submit" className="btn-primary">
                     Continue

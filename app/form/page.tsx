@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import {
   FIELD_OPTIONS,
   clampNumber,
+  numberBounds,
   normalizeProfile,
   type DeepPartialProfile,
 } from "@/lib/interview";
@@ -80,27 +81,45 @@ function NumberField({
   value: number | undefined;
   onChange: (value: number) => void;
 }) {
+  const bounds = numberBounds(field);
+  // Say so when a value was rewritten. A number that silently changes under
+  // your fingers reads as a bug, not a guard rail.
+  const [clamped, setClamped] = useState(false);
+
   return (
     <label className="block">
       <span className="text-sm font-medium">{label}</span>
       {hint && <p className="mt-1 text-sm text-muted">{hint}</p>}
       <div className="mt-2.5 flex items-center gap-2">
         <input
+          type="number"
           inputMode="numeric"
+          min={bounds?.min}
+          max={bounds?.max}
           value={value ?? ""}
           placeholder="0"
           onChange={(event) => {
-            const parsed = Number(event.target.value);
-            onChange(
-              event.target.value.trim() === "" || !Number.isFinite(parsed)
-                ? 0
-                : clampNumber(field, parsed),
-            );
+            const raw = event.target.value;
+            if (raw.trim() === "") {
+              setClamped(false);
+              onChange(0);
+              return;
+            }
+            const parsed = Number(raw);
+            if (!Number.isFinite(parsed)) return;
+            const next = clampNumber(field, parsed);
+            setClamped(next !== parsed);
+            onChange(next);
           }}
           className="w-32 rounded-xl border border-border bg-surface px-4 py-3 text-base outline-none focus:border-accent"
         />
         <span className="text-sm text-muted">{unit}</span>
       </div>
+      {clamped && bounds && (
+        <p className="mt-1.5 text-sm text-warm" role="status">
+          We keep this between {bounds.min} and {bounds.max}.
+        </p>
+      )}
     </label>
   );
 }
