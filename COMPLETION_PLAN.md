@@ -1,5 +1,9 @@
 # IcareEarth — Completion Plan
 
+> **Status: complete.** All six tiers landed 2026-08-23. Commits ab5a211 (Tier 0),
+> c430083 (Tier 2), then Tiers 1, 3, 4 and 5. 137 tests, clean build, clean lint.
+> What each tier actually found is recorded in its commit message.
+
 Written 2026-08-23, after the hackathon. The 12-hour build shipped all nine phases, but
 phases 4–9 went out in one compressed batch under time pressure. This plan takes the
 project from "demo that survived judging" to "finished piece of work": every rushed
