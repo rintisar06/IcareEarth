@@ -10,6 +10,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { callerKey, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 import { PROVINCES, PROVINCE_NAMES } from "@/lib/types";
 import type {
   DairyLevel,
@@ -178,7 +179,14 @@ function describeProfile(p: UserProfile): string {
   return lines.join("\n");
 }
 
+const RATE_LIMIT = 6;
+const RATE_WINDOW_MS = 60_000;
+
 export async function POST(request: Request) {
+  // A plan is a Sonnet call. Cap it harder than the interview.
+  const limit = rateLimit(callerKey(request, "plan"), RATE_LIMIT, RATE_WINDOW_MS);
+  if (!limit.ok) return tooManyRequests(limit.retryAfter);
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return Response.json({ error: "Plan writing is unavailable." }, { status: 503 });
   }

@@ -218,10 +218,28 @@ export default function ResultsPage() {
     };
   }, [profile]);
 
+  // The store reads null on the server and on the first client render, so this
+  // frame always shows. A skeleton in the shape of the real page reads as
+  // loading; a bare line of text read as a broken page.
   if (!profile || !computed) {
     return (
-      <main className="mx-auto w-full max-w-2xl flex-1 px-5 py-12">
-        <p className="text-muted">Loading your results…</p>
+      <main
+        className="mx-auto w-full max-w-2xl flex-1 px-5 py-8 sm:py-12"
+        aria-busy="true"
+        aria-label="Loading your results"
+      >
+        <Logo />
+        <div className="mt-7 space-y-3">
+          <div className="h-4 w-28 animate-pulse rounded bg-border/60" />
+          <div className="h-12 w-64 animate-pulse rounded bg-border/70" />
+          <div className="h-3 w-full animate-pulse rounded-full bg-border/50" />
+        </div>
+        <div className="mt-11 space-y-3">
+          <div className="h-6 w-48 animate-pulse rounded bg-border/60" />
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-border/40" />
+          ))}
+        </div>
       </main>
     );
   }

@@ -6,6 +6,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { callerKey, rateLimit, tooManyRequests } from "@/lib/rate-limit";
 import { PROVINCES } from "@/lib/types";
 import {
   parseInterviewResponse,
@@ -70,7 +71,15 @@ function fallback(reason: string): Response {
   return Response.json({ fallback: true, reason } satisfies InterviewResult);
 }
 
+const RATE_LIMIT = 20;
+const RATE_WINDOW_MS = 60_000;
+const MAX_BODY_BYTES = 32_000;
+
 export async function POST(request: Request) {
+  // An interview is many small Haiku calls, so this is looser than /api/plan.
+  const limit = rateLimit(callerKey(request, "interview"), RATE_LIMIT, RATE_WINDOW_MS);
+  if (!limit.ok) return tooManyRequests(limit.retryAfter);
+
   if (!process.env.ANTHROPIC_API_KEY) {
     // Retrying will not conjure a key. Send them to the form immediately.
     return fallback("no-api-key");
@@ -78,7 +87,11 @@ export async function POST(request: Request) {
 
   let body: InterviewRequestBody;
   try {
-    const raw = await request.json();
+    const text = await request.text();
+    if (text.length > MAX_BODY_BYTES) {
+      return Response.json({ error: "Request body too large." }, { status: 413 });
+    }
+    const raw = JSON.parse(text);
     body = {
       profile: raw?.profile ?? {},
       history: Array.isArray(raw?.history) ? raw.history : [],
