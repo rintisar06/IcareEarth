@@ -236,16 +236,72 @@ export function numberBounds(
 // Profile assembly
 // ---------------------------------------------------------------------------
 
+/** Values a field will accept from the model, beyond the enum lists above. */
+const BOOLEAN_FIELDS = new Set(["home.thermostatSetback"]);
+const NUMBER_FIELDS = new Set(Object.keys(NUMBER_BOUNDS));
+
+/**
+ * Clean one model-supplied value, or reject it.
+ *
+ * `profileUpdates` is raw model output and used to be merged verbatim, which
+ * quietly defeated every guard on the answer path: a production run typed 150
+ * flights, clampNumber correctly capped it at 100, and then the model's own
+ * update wrote 150 straight back over it. Anything arriving here is checked the
+ * same way an answer is.
+ */
+function sanitizeValue(field: string, value: unknown): unknown | undefined {
+  if (!isProfileField(field)) return undefined;
+
+  if (NUMBER_FIELDS.has(field)) {
+    const n = typeof value === "number" ? value : Number(value);
+    return Number.isFinite(n) ? clampNumber(field, n) : undefined;
+  }
+
+  if (BOOLEAN_FIELDS.has(field)) {
+    return typeof value === "boolean" ? value : undefined;
+  }
+
+  const allowed = FIELD_OPTIONS[field];
+  if (allowed) {
+    return allowed.some((o) => o.value === value) ? value : undefined;
+  }
+
+  return undefined;
+}
+
+/** Drop anything the model invented, clamp anything it exaggerated. */
+export function sanitizeProfileUpdates(
+  updates: DeepPartialProfile | undefined,
+): DeepPartialProfile {
+  if (!updates || typeof updates !== "object") return {};
+
+  const clean: Record<string, Record<string, unknown>> = {};
+
+  for (const [section, patch] of Object.entries(updates)) {
+    if (!patch || typeof patch !== "object" || Array.isArray(patch)) continue;
+
+    for (const [key, value] of Object.entries(patch as Record<string, unknown>)) {
+      const cleaned = sanitizeValue(`${section}.${key}`, value);
+      if (cleaned === undefined) continue;
+      clean[section] ??= {};
+      clean[section][key] = cleaned;
+    }
+  }
+
+  return clean as DeepPartialProfile;
+}
+
 export function mergeProfile(
   base: DeepPartialProfile,
   updates: DeepPartialProfile | undefined,
 ): DeepPartialProfile {
   if (!updates) return base;
+  const safe = sanitizeProfileUpdates(updates);
   return {
-    transport: { ...base.transport, ...updates.transport },
-    diet: { ...base.diet, ...updates.diet },
-    home: { ...base.home, ...updates.home },
-    flights: { ...base.flights, ...updates.flights },
+    transport: { ...base.transport, ...safe.transport },
+    diet: { ...base.diet, ...safe.diet },
+    home: { ...base.home, ...safe.home },
+    flights: { ...base.flights, ...safe.flights },
   };
 }
 

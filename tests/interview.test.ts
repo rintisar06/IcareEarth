@@ -21,6 +21,7 @@ import {
   normalizeProfile,
   optionsFor,
   parseInterviewResponse,
+  sanitizeProfileUpdates,
   profileProgress,
   type DeepPartialProfile,
   type InterviewQuestion,
@@ -425,5 +426,71 @@ describe("profileProgress — honest about what is left", () => {
       flights: { perYear: 0, typicalDistance: "short" },
     });
     assert.ok(p <= 1);
+  });
+});
+
+describe("sanitizeProfileUpdates — model output is not trusted either", () => {
+  it("clamps a number the model exaggerated", () => {
+    // The exact production bug: clampNumber capped 150 flights at 100, then the
+    // model's own update wrote 150 straight back over it.
+    const merged = mergeProfile({ flights: { perYear: 100 } }, { flights: { perYear: 150 } });
+    assert.equal(merged.flights?.perYear, 100);
+  });
+
+  it("clamps red meat above a week", () => {
+    const merged = mergeProfile({}, { diet: { redMeatMealsPerWeek: 99 } });
+    assert.equal(merged.diet?.redMeatMealsPerWeek, 14);
+  });
+
+  it("drops an enum value that isn't legal", () => {
+    assert.equal(sanitizeProfileUpdates({ home: { province: "NARNIA" as never } }).home, undefined);
+    assert.equal(sanitizeProfileUpdates({ diet: { pattern: "carnivore" as never } }).diet, undefined);
+    assert.equal(
+      sanitizeProfileUpdates({ transport: { mode: "teleport" as never } }).transport,
+      undefined,
+    );
+  });
+
+  it("keeps enum values that are legal", () => {
+    assert.equal(sanitizeProfileUpdates({ home: { province: "AB" } }).home?.province, "AB");
+    assert.equal(sanitizeProfileUpdates({ diet: { pattern: "vegan" } }).diet?.pattern, "vegan");
+  });
+
+  it("drops a field the model invented", () => {
+    const clean = sanitizeProfileUpdates({
+      transport: { parkingSpots: 3 } as never,
+    });
+    assert.deepEqual(clean, {});
+  });
+
+  it("drops an unknown section", () => {
+    assert.deepEqual(sanitizeProfileUpdates({ finances: { income: 1 } } as never), {});
+  });
+
+  it("requires booleans to actually be booleans", () => {
+    assert.equal(sanitizeProfileUpdates({ home: { thermostatSetback: "yes" as never } }).home, undefined);
+    assert.equal(sanitizeProfileUpdates({ home: { thermostatSetback: true } }).home?.thermostatSetback, true);
+  });
+
+  it("rejects a non-finite number rather than storing NaN", () => {
+    assert.equal(sanitizeProfileUpdates({ transport: { weeklyKm: NaN } }).transport, undefined);
+    assert.equal(
+      sanitizeProfileUpdates({ transport: { weeklyKm: Infinity } }).transport,
+      undefined,
+    );
+  });
+
+  it("survives a garbage shape without throwing", () => {
+    assert.deepEqual(sanitizeProfileUpdates(null as never), {});
+    assert.deepEqual(sanitizeProfileUpdates({ diet: "nope" } as never), {});
+    assert.deepEqual(sanitizeProfileUpdates({ diet: [1, 2] } as never), {});
+  });
+
+  it("never lets an update resurrect a value the clamps rejected", () => {
+    const merged = mergeProfile(
+      { transport: { weeklyKm: 5000 } },
+      { transport: { weeklyKm: 999_999 } },
+    );
+    assert.equal(merged.transport?.weeklyKm, 5000);
   });
 });
