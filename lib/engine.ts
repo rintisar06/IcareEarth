@@ -16,7 +16,7 @@ import type {
   Intervention,
   Province,
   UserProfile,
-} from "./types";
+} from "./types.ts";
 
 // ---------------------------------------------------------------------------
 // Modelling assumptions

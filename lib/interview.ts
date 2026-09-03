@@ -11,7 +11,7 @@ import {
   PROVINCE_NAMES,
   type Province,
   type UserProfile,
-} from "./types";
+} from "./types.ts";
 
 // ---------------------------------------------------------------------------
 // Wire format

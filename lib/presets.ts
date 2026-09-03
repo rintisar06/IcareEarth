@@ -6,7 +6,7 @@
  * wifi connection in a judging room.
  */
 
-import type { UserProfile } from "./types";
+import type { UserProfile } from "./types.ts";
 // The attribute is required by Node's ESM loader (scripts/cache-preset-plans.ts
 // imports this file directly); Turbopack accepts it too.
 import presetPlans from "./preset-plans.json" with { type: "json" };

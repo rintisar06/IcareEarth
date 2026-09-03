@@ -12,7 +12,7 @@
  */
 
 import { useSyncExternalStore } from "react";
-import type { DeepPartialProfile } from "./interview";
+import type { DeepPartialProfile } from "./interview.ts";
 
 const KEY = "icareearth.profile";
 

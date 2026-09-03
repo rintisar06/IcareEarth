@@ -6,7 +6,7 @@
  * it sits next to.
  */
 
-import type { Factors } from "./types";
+import type { Factors } from "./types.ts";
 
 /**
  * CO2e a single tree sequesters over ten years of growth. A round number by
