@@ -37,9 +37,18 @@ function hydrate() {
   }
 }
 
+/**
+ * Store a profile.
+ *
+ * Clears any preset marker first. A stored profile belongs to a real person
+ * unless a preset immediately claims it — without this, someone who viewed a
+ * demo character and then ran their own interview was served that character's
+ * committed plan, complete with the character's numbers.
+ */
 export function setProfile(profile: DeepPartialProfile) {
   hydrated = true;
   snapshot = profile;
+  setPresetId(null);
   try {
     window.sessionStorage.setItem(KEY, JSON.stringify(profile));
   } catch {
@@ -52,6 +61,7 @@ export function setProfile(profile: DeepPartialProfile) {
 export function clearProfile() {
   hydrated = true;
   snapshot = null;
+  setPresetId(null);
   try {
     window.sessionStorage.removeItem(KEY);
   } catch {

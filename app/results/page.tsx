@@ -250,6 +250,27 @@ export default function ResultsPage() {
         </div>
       </section>
 
+      {/* Nothing feasible is a real answer, not an error. Someone who walks
+          everywhere, eats plants, and doesn't heat or fly has already made
+          every change we know how to price. */}
+      {top.length === 0 ? (
+        <section className="card mt-11 p-5 sm:p-6">
+          <h2 className="text-lg font-semibold tracking-tight">
+            We have nothing to tell you
+          </h2>
+          <p className="mt-2.5 text-sm leading-relaxed text-muted">
+            All 10 of the changes we know how to price already don&apos;t apply
+            to your life. That is a genuinely unusual result, and the honest
+            response is to say so rather than invent an eleventh.
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted">
+            Your remaining {kg(footprint.total)} kg comes from the parts of a
+            footprint this tool doesn&apos;t model — the goods you buy, the food
+            system behind your plate, public infrastructure. Those are real, and
+            they are mostly not decided one person at a time.
+          </p>
+        </section>
+      ) : (
       <section className="mt-11">
         <h2 className="text-lg font-semibold tracking-tight">
           {top.length === 1
@@ -313,6 +334,7 @@ export default function ResultsPage() {
           })}
         </ul>
       </section>
+      )}
 
       {selected && (
         <section className="mt-11 rounded-2xl border border-border bg-surface p-5 sm:p-6">

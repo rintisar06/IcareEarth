@@ -299,7 +299,7 @@ export function buildInterventions(): Intervention[] {
       label: "Take transit two days a week",
       description: "Leave the car home two days out of five and take the bus.",
       assumptions:
-        "Two fifths of your driving replaced by bus at average occupancy.",
+        "Two fifths of your driving replaced by bus at average occupancy. Priced as bus rather than rail on purpose: bus emits about three times as much per passenger-kilometre, so if you take a train instead the real saving is larger than this.",
       sourceCitation: "UK DESNZ/DEFRA GHG Conversion Factors 2025",
       feasible: drivesACar,
       savingsKgPerYear: (p, f) =>
@@ -311,7 +311,8 @@ export function buildInterventions(): Intervention[] {
       id: "transit-full",
       label: "Switch to transit entirely",
       description: "Give up driving and take the bus for all of it.",
-      assumptions: "All of your driving replaced by bus at average occupancy.",
+      assumptions:
+        "All of your driving replaced by bus at average occupancy. Priced as bus rather than rail on purpose: bus emits about three times as much per passenger-kilometre, so if you take a train instead the real saving is larger than this.",
       sourceCitation: "UK DESNZ/DEFRA GHG Conversion Factors 2025",
       feasible: drivesACar,
       savingsKgPerYear: (p, f) =>

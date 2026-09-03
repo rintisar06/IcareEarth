@@ -89,9 +89,19 @@ export default function InterviewPage() {
           const merged = mergeProfile(nextProfile, data.profileUpdates);
           setProfileState(merged);
 
-          if (data.complete || isProfileComplete(merged)) {
+          // The data decides this, not the model. If it claims complete while
+          // categories are still missing, believing it would hand the engine
+          // defaults the person never chose and present the result as theirs.
+          if (isProfileComplete(merged)) {
             storeProfile(merged);
             router.replace("/results");
+            return;
+          }
+
+          // Model says done, profile says otherwise: let the form collect the
+          // remainder rather than guessing on their behalf.
+          if (data.complete) {
+            goToForm(merged);
             return;
           }
 

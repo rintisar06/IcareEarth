@@ -238,16 +238,41 @@ export function mergeProfile(
   };
 }
 
+/**
+ * Every dotted path the profile actually has. The model proposes a
+ * profileField, so anything outside this list is dropped rather than written:
+ * an invented key like "transport.parkingSpots" would otherwise sit in the
+ * stored profile forever, invisible until someone extended the type onto it.
+ */
+export const PROFILE_FIELDS = [
+  "transport.mode",
+  "transport.weeklyKm",
+  "transport.vehicleType",
+  "diet.pattern",
+  "diet.redMeatMealsPerWeek",
+  "diet.dairyLevel",
+  "home.heatingType",
+  "home.province",
+  "home.thermostatSetback",
+  "flights.perYear",
+  "flights.typicalDistance",
+] as const;
+
+export type ProfileField = (typeof PROFILE_FIELDS)[number];
+
+export function isProfileField(field: string): field is ProfileField {
+  return (PROFILE_FIELDS as readonly string[]).includes(field);
+}
+
 /** Apply a single answer at a dotted path, e.g. "transport.weeklyKm". */
 export function applyAnswer(
   profile: DeepPartialProfile,
   profileField: string,
   value: string | number | boolean,
 ): DeepPartialProfile {
-  const [section, key] = profileField.split(".");
-  if (!section || !key) return profile;
-  if (!["transport", "diet", "home", "flights"].includes(section)) return profile;
+  if (!isProfileField(profileField)) return profile;
 
+  const [section, key] = profileField.split(".");
   const next = { ...profile } as Record<string, Record<string, unknown>>;
   next[section] = { ...(next[section] ?? {}), [key]: value };
   return next as DeepPartialProfile;
